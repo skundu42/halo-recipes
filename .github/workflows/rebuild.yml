@@ -1,0 +1,33 @@
+name: Test and rebuild
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 4 * * *" # daily, so the index follows Halo's main branch
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: HALO_REPO_DIR=.cache/halo npm test
+
+  redeploy:
+    needs: test
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger the Cloudflare Pages deploy hook
+        env:
+          HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "Set the CLOUDFLARE_DEPLOY_HOOK_URL secret to enable scheduled rebuilds."; exit 1; fi
+          curl -fsS -X POST "$HOOK"

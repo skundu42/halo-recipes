@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Halo Recipes</title>
+  <meta name="description" content="Find a training recipe from the Halo LLM toolkit by method, model family and the GPUs you have, and copy its launch command.">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <meta name="halo-recipes-data" content="data/recipes.json">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#results">Skip to results</a>
+
+  <header class="hero">
+    <div class="hero-card">
+      <nav class="hero-nav" aria-label="Halo">
+        <a class="pill" href="https://whitecircle.com/halo/docs">Docs <span aria-hidden="true">↗</span></a>
+        <a class="pill" href="https://whitecircle.com/halo">Website <span aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="hero-intro">
+        <h1 class="title">Halo Recipes</h1>
+        <p class="lede">Every training recipe in the Halo toolkit, by method, model family and the GPUs you have. Pick one and copy its launch command.</p>
+      </div>
+
+      <section class="rack" aria-labelledby="rack-title">
+        <div class="rack-head">
+          <h2 class="rack-title" id="rack-title">How many GPUs do you have?</h2>
+          <output class="rack-readout" id="rack-readout" for="rack">Pick a slot to filter by GPU count</output>
+        </div>
+        <div class="rack-boards" id="rack" role="radiogroup" aria-labelledby="rack-title"></div>
+      </section>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <details class="filters" id="filters-panel">
+      <summary class="filters-toggle">Filters <span class="filters-active" id="filters-active"></span></summary>
+      <form class="filters-form" id="filters" aria-label="Filter recipes"></form>
+    </details>
+
+    <main class="results" id="results" tabindex="-1">
+      <div class="toolbar">
+        <label class="search">
+          <span class="visually-hidden">Search recipes</span>
+          <input class="search-input" type="search" id="q" placeholder="Search models, datasets and file names" autocomplete="off" spellcheck="false">
+        </label>
+        <label class="sort">
+          <span class="sort-label">Sort by</span>
+          <select class="sort-select" id="sort">
+            <option value="method">Method</option>
+            <option value="gpus-asc">Fewest GPUs</option>
+            <option value="gpus-desc">Most GPUs</option>
+            <option value="context">Longest context</option>
+            <option value="name">Name</option>
+          </select>
+        </label>
+      </div>
+      <p class="count" id="count" aria-live="polite"></p>
+      <table class="recipes" id="recipes">
+        <thead>
+          <tr>
+            <th scope="col" class="col-gpus">GPUs</th>
+            <th scope="col">Recipe</th>
+            <th scope="col">Method</th>
+            <th scope="col">Model family</th>
+            <th scope="col">Parallelism</th>
+            <th scope="col">Tuning</th>
+            <th scope="col" class="col-context">Context</th>
+          </tr>
+        </thead>
+        <tbody id="recipe-rows"></tbody>
+      </table>
+      <div class="empty" id="empty" hidden>
+        <p>No recipe matches these filters.</p>
+        <button type="button" class="button" id="clear-all">Clear all filters</button>
+      </div>
+      <noscript><p class="empty">The recipe explorer needs JavaScript to load and filter the index.</p></noscript>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <p>Built with <span class="heart" aria-hidden="true">♥</span><span class="visually-hidden">love</span> by <a href="https://x.com/SandipanKundu42">Sandipan Kundu</a></p>
+  </footer>
+
+  <dialog class="detail" id="detail" aria-labelledby="detail-title">
+    <div class="detail-bar">
+      <button type="button" class="button" id="detail-close">Close</button>
+    </div>
+    <article class="detail-body" id="detail-body"></article>
+  </dialog>
+</body>
+</html>

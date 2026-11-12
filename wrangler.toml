@@ -1,0 +1,4 @@
+# Cloudflare Pages project config: `npx wrangler pages deploy` reads the output directory from here.
+name = "halo-recipes"
+pages_build_output_dir = "dist"
+compatibility_date = "2025-06-01"
