@@ -25,7 +25,7 @@ jobs:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger the Cloudflare Pages deploy hook
+      - name: Trigger the Cloudflare deploy hook
         env:
           HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_URL }}
         run: |

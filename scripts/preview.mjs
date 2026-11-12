@@ -1,4 +1,4 @@
-// Serves dist/ on localhost for a quick look. `npx wrangler pages dev dist` previews it exactly as Cloudflare
+// Serves dist/ on localhost for a quick look. `npx wrangler dev` previews it exactly as Cloudflare
 // serves it, _headers included.
 import { readFile, stat } from "node:fs/promises";
 import { createServer } from "node:http";

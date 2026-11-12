@@ -2,7 +2,7 @@
 
 A searchable index of every training recipe in [Halo](https://github.com/whitecircle/halo). Filter by method,
 model family, tuning, parallelism and the GPUs you have, then copy the launch command. It's a static site
-built for Cloudflare Pages.
+deployed as a Cloudflare Worker that serves only static assets.
 
 This is a community project and is not affiliated with White Circle. Where a recipe disagrees with Halo's
 supported matrix, the matrix wins.
@@ -43,21 +43,24 @@ npm test                              # extractor tests; HALO_REPO_DIR=../halo a
 The build fails if a recipe doesn't parse or if the docs it reads change shape. It prints a warning for any
 recipe it can't match to a family.
 
-## Deploy to Cloudflare Pages
+## Deploy to Cloudflare
 
-**From Git (recommended).** Push this folder to its own GitHub repo, then in the Cloudflare dashboard go to
-Workers & Pages, choose Create, then Pages, then Connect to Git, and use these settings:
+`wrangler.toml` deploys the site as a Worker that serves `dist/` as static assets. Its `[build]` step runs
+`npm run build` before every `wrangler deploy`, so the deploy needs no separate build command.
+
+**From Git (recommended).** In the Cloudflare dashboard, go to Workers & Pages, choose Create, then import
+this GitHub repo as a Worker. The defaults work:
 
 | Setting | Value |
 | --- | --- |
-| Build command | `npm run build` |
-| Build output directory | `dist` |
-| Environment variables | `NODE_VERSION=22`, and optionally `HALO_REF=v1.3.0` to pin a release |
+| Build command | leave empty |
+| Deploy command | `npx wrangler deploy` |
+| Build variables | optional: `HALO_REF=v1.3.0` to pin a Halo release |
 
-Cloudflare runs the build, which clones Halo, so each deploy indexes the latest `main` (or your pinned ref).
+Cloudflare reads the Node version from `.nvmrc`. Each build clones Halo, so every deploy indexes the latest
+`main` (or your pinned ref).
 
-**Direct upload.** Build locally and push the output: `npm run deploy` runs the build and then
-`npx wrangler pages deploy dist`. The project name comes from `wrangler.toml`.
+**From your machine.** `npm run deploy` builds and deploys with wrangler; run `npx wrangler login` first.
 
 `site/_headers` sets a strict Content-Security-Policy: the page loads nothing from other origins, and fonts
 are self-hosted. It also marks hashed assets, the index and the raw files as immutable, and makes the HTML
@@ -65,11 +68,10 @@ revalidate on every request.
 
 ## Keep it current
 
-Halo's recipes change often. `.github/workflows/rebuild.yml` triggers a Cloudflare Pages deploy hook every
-day:
+Halo's recipes change often. `.github/workflows/rebuild.yml` triggers a Cloudflare deploy hook every day:
 
-1. In the Pages project, go to Settings, then Builds, then Deploy hooks, and create a hook for your
-   production branch.
+1. In the Worker, go to Settings, then Builds, then Deploy Hooks, and create a hook for your production
+   branch.
 2. In this repo's GitHub settings, add the hook URL as the Actions secret `CLOUDFLARE_DEPLOY_HOOK_URL`.
 
 ## Layout

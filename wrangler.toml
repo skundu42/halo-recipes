@@ -1,4 +1,11 @@
-# Cloudflare Pages project config: `npx wrangler pages deploy` reads the output directory from here.
+# Cloudflare Workers config: the site deploys as a Worker that serves only static assets.
+# `npx wrangler deploy` (the Workers Builds default deploy command) runs [build] first, so the
+# Cloudflare project needs no build command of its own.
 name = "halo-recipes"
-pages_build_output_dir = "dist"
 compatibility_date = "2025-06-01"
+
+[build]
+command = "npm run build"
+
+[assets]
+directory = "./dist"
