@@ -39,6 +39,7 @@ npm test                              # extractor tests; HALO_REPO_DIR=../halo a
 | `HALO_REF` | `main` | Branch or tag to clone (`git clone --branch` does not accept a commit SHA) |
 | `HALO_GITHUB_REPO` | `whitecircle/halo` | Repository to clone and link to |
 | `HALO_REPO_DIR` | unset | Index this local checkout instead of cloning |
+| `SITE_URL` | `https://halo-recipes.sandipank-dev.workers.dev` | Public address the social-card tags point at; set it when the site moves to its own domain |
 
 The build fails if a recipe doesn't parse or if the docs it reads change shape. It prints a warning for any
 recipe it can't match to a family.
@@ -66,6 +67,12 @@ Cloudflare reads the Node version from `.nvmrc`. Each build clones Halo, so ever
 are self-hosted. It also marks hashed assets, the index and the raw files as immutable, and makes the HTML
 revalidate on every request.
 
+## Social card
+
+Shared links show `site/og.png`, a 1200×630 card rendered from `og/card.html`. The PNG is committed, so the
+Cloudflare build needs no browser. After changing the card, run `npm run og` (it uses a local Chrome or
+Chromium; set `CHROME_PATH` if it isn't found) and commit the new image.
+
 ## Keep it current
 
 Halo's recipes change often. `.github/workflows/rebuild.yml` triggers a Cloudflare deploy hook every day:
@@ -81,6 +88,7 @@ scripts/extract.mjs   repo -> recipe index (pure functions, unit tested)
 scripts/source.mjs    which Halo checkout to read: local dir or shallow clone
 scripts/build.mjs     writes dist/: hashed assets, data/recipes.<hash>.json, raw/<sha>/…
 scripts/preview.mjs   local static server
+scripts/render-og.mjs og/card.html -> site/og.png with headless Chrome
 site/                 index.html, app.js (no dependencies), styles.css, _headers
 test/                 node:test suite
 ```

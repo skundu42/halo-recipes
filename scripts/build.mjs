@@ -19,6 +19,9 @@ const FONTS = [
   "@fontsource/hanken-grotesk/files/hanken-grotesk-latin-600-normal.woff2",
 ];
 
+// Social cards need absolute URLs; set SITE_URL when the site moves to its own domain.
+const DEFAULT_SITE_URL = "https://halo-recipes.sandipank-dev.workers.dev";
+
 const digest = (content) => createHash("sha256").update(content).digest("hex").slice(0, 10);
 
 function write(relPath, content) {
@@ -31,6 +34,17 @@ function write(relPath, content) {
 function writeHashed(dir, name, content) {
   const dot = name.lastIndexOf(".");
   return write(`${dir}/${name.slice(0, dot)}.${digest(content)}${name.slice(dot)}`, content);
+}
+
+function resolveSiteUrl(value) {
+  const url = new URL(value);
+  if (url.protocol !== "https:") throw new Error(`SITE_URL must be an https URL, got "${value}"`);
+  return `${url.origin}${url.pathname.replace(/\/$/, "")}`;
+}
+
+function replaceEvery(text, from, to, file) {
+  if (!text.includes(from)) throw new Error(`${file} no longer contains "${from}"; update build.mjs`);
+  return text.replaceAll(from, to);
 }
 
 function replaceOnce(text, from, to, file) {
@@ -72,6 +86,9 @@ let html = readFileSync(join(site, "index.html"), "utf8");
 html = replaceOnce(html, 'href="styles.css"', `href="${writeHashed("assets", "styles.css", css)}"`, "site/index.html");
 html = replaceOnce(html, 'src="app.js"', `src="${writeHashed("assets", "app.js", readFileSync(join(site, "app.js")))}"`, "site/index.html");
 html = replaceOnce(html, 'content="data/recipes.json"', `content="${dataPath}"`, "site/index.html");
+const siteUrl = resolveSiteUrl(process.env.SITE_URL || DEFAULT_SITE_URL);
+html = replaceEvery(html, "{{SITE_URL}}", siteUrl, "site/index.html");
+html = replaceOnce(html, "{{OG_IMAGE}}", `${siteUrl}/${writeHashed("assets", "og.png", readFileSync(join(site, "og.png")))}`, "site/index.html");
 write("index.html", html);
 
 for (const file of ["_headers", "favicon.svg", "robots.txt"]) copyFileSync(join(site, file), join(dist, file));

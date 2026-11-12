@@ -10,6 +10,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "preview": "node scripts/preview.mjs",
+    "og": "node scripts/render-og.mjs",
     "test": "node --test \"test/*.test.mjs\"",
     "deploy": "npx wrangler deploy"
   },

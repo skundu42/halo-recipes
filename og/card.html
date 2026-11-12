@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Halo Recipes social card</title>
+  <!-- Source of site/og.png. Render it with `npm run og` after changing it. -->
+  <style>
+    @font-face {
+      font-family: "Newsreader";
+      font-weight: 400;
+      src: url("../node_modules/@fontsource/newsreader/files/newsreader-latin-400-normal.woff2") format("woff2");
+    }
+    @font-face {
+      font-family: "Hanken Grotesk";
+      font-weight: 400;
+      src: url("../node_modules/@fontsource/hanken-grotesk/files/hanken-grotesk-latin-400-normal.woff2") format("woff2");
+    }
+
+    html,
+    body {
+      width: 1200px;
+      height: 630px;
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+    }
+
+    body {
+      position: relative;
+      color: #f4f4f6;
+      font-family: "Hanken Grotesk", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .glow {
+      position: absolute;
+      left: 50%;
+      top: -45%;
+      width: 90%;
+      height: 90%;
+      transform: translateX(-50%);
+      background: radial-gradient(closest-side, rgba(255, 255, 255, 0.12), transparent);
+    }
+
+    .dots {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1.2px, transparent 1.7px);
+      background-size: 24px 24px;
+      -webkit-mask-image: radial-gradient(ellipse 72% 78% at 50% 40%, #000 15%, transparent 82%);
+    }
+
+    .content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 630px;
+    }
+
+    h1 {
+      margin: 0;
+      font: 400 124px/1 "Newsreader", serif;
+      letter-spacing: -0.03em;
+    }
+
+    p {
+      margin: 24px 0 0;
+      font-size: 31px;
+      color: #b3b4bd;
+      letter-spacing: -0.005em;
+    }
+
+    .rack {
+      display: flex;
+      gap: 18px;
+      margin-top: 60px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(8, 40px);
+      gap: 12px;
+      padding: 18px 22px;
+      border: 1.5px solid #262626;
+      border-radius: 22px;
+      background: rgba(10, 10, 10, 0.9);
+    }
+
+    .pad {
+      height: 54px;
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .pad.on {
+      border-color: #fff;
+      background: #f4f4f6;
+      box-shadow: 0 0 22px rgba(255, 255, 255, 0.45), 0 0 3px rgba(255, 255, 255, 0.9);
+    }
+  </style>
+</head>
+<body>
+  <div class="glow"></div>
+  <div class="dots"></div>
+  <main class="content">
+    <h1>Halo Recipes</h1>
+    <p>Every Halo training recipe, by method, model family and GPU count.</p>
+    <div class="rack">
+      <div class="board">
+        <div class="pad on"></div><div class="pad on"></div><div class="pad on"></div><div class="pad on"></div>
+        <div class="pad on"></div><div class="pad on"></div><div class="pad on"></div><div class="pad on"></div>
+      </div>
+      <div class="board">
+        <div class="pad"></div><div class="pad"></div><div class="pad"></div><div class="pad"></div>
+        <div class="pad"></div><div class="pad"></div><div class="pad"></div><div class="pad"></div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
